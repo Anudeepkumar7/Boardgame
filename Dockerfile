@@ -1,11 +1,14 @@
-FROM adoptopenjdk/openjdk11
-  
-EXPOSE 8080
- 
-ENV APP_HOME /usr/src/app
+# Use the official httpd image as the base image
+FROM httpd:latest
 
-COPY target/*.jar $APP_HOME/app.jar
+# Copy custom configuration file to Apache configuration directory
+COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
 
-WORKDIR $APP_HOME
+# Copy custom HTML files to Apache document root directory
+COPY ./html /usr/local/apache2/htdocs/
 
-CMD ["java", "-jar", "app.jar"]
+# Expose port 80 to allow incoming traffic
+EXPOSE 80
+
+# Start Apache HTTP Server when the container starts
+CMD ["httpd-foreground"]
